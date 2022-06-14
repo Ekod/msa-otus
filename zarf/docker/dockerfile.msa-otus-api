@@ -1,6 +1,6 @@
 # Build the Go Binary.
 FROM golang:1.18 as build_msa-otus-api
-
+ENV CGO_ENABLED 0
 COPY . /service
 
 # Build the service binary.

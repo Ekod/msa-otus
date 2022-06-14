@@ -16,6 +16,7 @@ func Mux(log *zap.SugaredLogger) *gin.Engine {
 	healthGroup := router.Group("/health")
 	{
 		healthGroup.GET("/", hgh.ReadinessCheck)
+		healthGroup.GET("/liveness", hgh.LivenessCheck)
 	}
 
 	return router

@@ -89,6 +89,7 @@ func run(log *zap.SugaredLogger) error {
 	select {
 	case err := <-serverErrors:
 		return fmt.Errorf("server error: %w", err)
+
 	case sig := <-shutdown:
 		log.Infow("shutdown", "status", "shutdown started", "signal", sig)
 		defer log.Infow("shutdown", "status", "shutdown complete", "signal", sig)
