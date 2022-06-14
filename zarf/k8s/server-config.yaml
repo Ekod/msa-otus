@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msa-otus-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: msa-otus
+  template:
+    metadata:
+      labels:
+        component: msa-otus
+    spec:
+      containers:
+        - name: msa-otus
+          image: ekod/msa-otus
+          # resources:
+          #   limits:
+          #     memory: "128Mi"
+          #     cpu: "500m"
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: msa-otus-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: msa-otus
+  ports:
+    - port: 8000
+      targetPort: 8000

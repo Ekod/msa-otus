@@ -1,0 +1,23 @@
+# Build the Go Binary.
+FROM golang:1.18 as build_msa-otus-api
+
+COPY . /service
+
+# Build the service binary.
+WORKDIR /service/app/services/msa-otus-api
+RUN go build
+
+
+# Run the Go Binary in Alpine.
+FROM alpine:3.15
+ARG BUILD_DATE
+ARG BUILD_REF
+COPY --from=build_msa-otus-api /service/app/services/msa-otus-api/msa-otus-api /service/msa-otus-api
+WORKDIR /service
+CMD ["./msa-otus-api"]
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.title="msa-otus-api" \
+      org.opencontainers.image.authors="Gleb Akishin <ekod87@yandex.ru>" \
+      org.opencontainers.image.source="https://github.com/Ekod/msa-otus/app/msa-otus-api" \
+      org.opencontainers.image.revision="${BUILD_REF}"
