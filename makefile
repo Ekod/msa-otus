@@ -12,6 +12,9 @@ tidy:
 	go mod tidy
 	go mod vendor
 
+logs:
+	kubectl logs -l component=msa-otus --all-containers=true -f --tail=100 | go run app/tooling/logfmt/main.go
+
 docker-deploy:
 	docker tag msa-otus-api-amd64 ekod/msa-otus
 	docker push ekod/msa-otus
@@ -22,4 +25,7 @@ delete:
 	kubectl delete -f zarf/k8s/
 
 build-deploy: msa-otus docker-deploy
+
+full-setup: msa-otus docker-deploy apply
+
 	
