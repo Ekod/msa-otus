@@ -13,7 +13,7 @@ import (
 
 	"github.com/Ekod/msa-otus/app/services/msa-otus-api/handlers"
 	"github.com/Ekod/msa-otus/app/tooling/logger"
-	// "github.com/Ekod/msa-otus/sys/database"
+	"github.com/Ekod/msa-otus/sys/database"
 	"github.com/ardanlabs/conf/v3"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -97,24 +97,24 @@ func run(log *zap.SugaredLogger) error {
 	// Database Support
 
 	// Create connectivity to the database.
-	// log.Infow("startup", "status", "initializing database support", "host", cfg.DB.Host)
+	log.Infow("startup", "status", "initializing database support", "host", cfg.DB.Host)
 
-	// db, err := database.Open(database.Config{
-	// 	User:         cfg.DB.User,
-	// 	Password:     cfg.DB.Password,
-	// 	Host:         cfg.DB.Host,
-	// 	Name:         cfg.DB.Name,
-	// 	MaxIdleConns: cfg.DB.MaxIdleConns,
-	// 	MaxOpenConns: cfg.DB.MaxOpenConns,
-	// 	DisableTLS:   cfg.DB.DisableTLS,
-	// })
-	// if err != nil {
-	// 	return fmt.Errorf("connecting to db: %w", err)
-	// }
-	// defer func() {
-	// 	log.Infow("shutdown", "status", "stopping database support", "host", cfg.DB.Host)
-	// 	db.Close()
-	// }()
+	db, err := database.Open(database.Config{
+		User:         cfg.DB.User,
+		Password:     cfg.DB.Password,
+		Host:         cfg.DB.Host,
+		Name:         cfg.DB.Name,
+		MaxIdleConns: cfg.DB.MaxIdleConns,
+		MaxOpenConns: cfg.DB.MaxOpenConns,
+		DisableTLS:   cfg.DB.DisableTLS,
+	})
+	if err != nil {
+		return fmt.Errorf("connecting to db: %w", err)
+	}
+	defer func() {
+		log.Infow("shutdown", "status", "stopping database support", "host", cfg.DB.Host)
+		db.Close()
+	}()
 
 	// =========================================================================
 	// Service
@@ -124,7 +124,7 @@ func run(log *zap.SugaredLogger) error {
 	corsConfig.AllowHeaders = []string{"Authorization", "Content-Type"}
 	corsConfig.AllowMethods = []string{http.MethodGet}
 
-	apiMux := handlers.Mux(log)
+	apiMux := handlers.Mux(log, db)
 
 	apiMux.Use(cors.New(corsConfig))
 	apiMux.Use(gin.Recovery())
