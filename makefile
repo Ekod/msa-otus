@@ -23,4 +23,3 @@ delete:
 
 build-deploy: msa-otus docker-deploy
 	
-	

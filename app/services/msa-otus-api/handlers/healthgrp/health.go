@@ -7,14 +7,14 @@ import (
 	"time"
 
 	"github.com/Ekod/msa-otus/sys/database"
-	"github.com/jmoiron/sqlx"
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
 type Handlers struct {
-	Log   *zap.SugaredLogger
-	DB    *sqlx.DB
+	Log *zap.SugaredLogger
+	DB  *sqlx.DB
 }
 
 func (h *Handlers) LivenessCheck(c *gin.Context) {

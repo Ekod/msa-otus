@@ -34,11 +34,21 @@ type Config struct {
 
 // Open knows how to open a database connection based on the configuration.
 func Open(cfg Config) (*sqlx.DB, error) {
+	sslMode := "require"
+	if cfg.DisableTLS {
+		sslMode = "disable"
+	}
+
+	q := make(url.Values)
+	q.Set("sslmode", sslMode)
+	q.Set("timezone", "utc")
+
 	u := url.URL{
 		Scheme:   "postgres",
 		User:     url.UserPassword(cfg.User, cfg.Password),
 		Host:     cfg.Host,
 		Path:     cfg.Name,
+		RawQuery: q.Encode(),
 	}
 
 	db, err := sqlx.Open("postgres", u.String())
@@ -62,6 +72,7 @@ func StatusCheck(ctx context.Context, db *sqlx.DB) error {
 		if pingError == nil {
 			break
 		}
+
 		time.Sleep(time.Duration(attempts) * 100 * time.Millisecond)
 		if ctx.Err() != nil {
 			return ctx.Err()

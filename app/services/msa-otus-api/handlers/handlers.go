@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/Ekod/msa-otus/app/services/msa-otus-api/handlers/healthgrp"
-	"github.com/jmoiron/sqlx"
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
@@ -11,8 +11,8 @@ func Mux(log *zap.SugaredLogger, db *sqlx.DB) *gin.Engine {
 	router := gin.Default()
 
 	hgh := healthgrp.Handlers{
-		Log:   log,
-		DB: db,
+		Log: log,
+		DB:  db,
 	}
 
 	healthGroup := router.Group("/health")
