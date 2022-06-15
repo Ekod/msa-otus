@@ -1,15 +1,20 @@
 package healthgrp
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
+	"time"
 
-	"go.uber.org/zap"
+	"github.com/Ekod/msa-otus/sys/database"
+	"github.com/jmoiron/sqlx"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type Handlers struct {
 	Log   *zap.SugaredLogger
+	DB    *sqlx.DB
 }
 
 func (h *Handlers) LivenessCheck(c *gin.Context) {
@@ -29,8 +34,16 @@ func (h *Handlers) LivenessCheck(c *gin.Context) {
 }
 
 func (h *Handlers) ReadinessCheck(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second)
+	defer cancel()
+
 	status := "OK"
 	statusCode := http.StatusOK
+
+	if err := database.StatusCheck(ctx, h.DB); err != nil {
+		status = "db not ready"
+		statusCode = http.StatusInternalServerError
+	}
 	data := struct {
 		Status string `json:"status"`
 	}{

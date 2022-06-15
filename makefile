@@ -1,8 +1,5 @@
 VERSION := 1.0
 
-#docker tag msa-otus-api-amd64:1.0 ekod/msa-otus
-#docker push ekod/msa-otus
-
 msa-otus:
 	docker build \
 		-f zarf/docker/dockerfile.msa-otus-api \
@@ -23,3 +20,7 @@ apply:
 
 delete:
 	kubectl delete -f zarf/k8s/
+
+build-deploy: msa-otus docker-deploy
+	
+	
