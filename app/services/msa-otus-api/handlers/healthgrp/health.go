@@ -1,12 +1,12 @@
 package healthgrp
 
 import (
-	"context"
+	// "context"
 	"encoding/json"
 	"net/http"
-	"time"
+	// "time"
 
-	"github.com/Ekod/msa-otus/sys/database"
+	// "github.com/Ekod/msa-otus/sys/database"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
@@ -34,16 +34,16 @@ func (h *Handlers) LivenessCheck(c *gin.Context) {
 }
 
 func (h *Handlers) ReadinessCheck(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second)
-	defer cancel()
+	// ctx, cancel := context.WithTimeout(c.Request.Context(), time.Second)
+	// defer cancel()
 
 	status := "OK"
 	statusCode := http.StatusOK
 
-	if err := database.StatusCheck(ctx, h.DB); err != nil {
-		status = "db not ready"
-		statusCode = http.StatusInternalServerError
-	}
+	// if err := database.StatusCheck(ctx, h.DB); err != nil {
+	// 	status = "db not ready"
+	// 	statusCode = http.StatusInternalServerError
+	// }
 	data := struct {
 		Status string `json:"status"`
 	}{
