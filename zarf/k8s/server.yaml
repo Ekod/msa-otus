@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: msa-otus-deployment
+  namespace: sales-system
 spec:
   replicas: 3
   selector:
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
         - name: msa-otus
-          image: ekod/msa-otus
+          image: msa-otus-api-amd64
           # resources:
           #   limits:
           #     memory: "128Mi"
@@ -44,6 +45,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: msa-otus-cluster-ip-service
+  namespace: sales-system
 spec:
   type: ClusterIP
   selector:
