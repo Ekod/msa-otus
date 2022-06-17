@@ -55,6 +55,6 @@ build-deploy: msa-otus docker-deploy
 kind-restart:
 	kubectl rollout restart deployment msa-otus-pod
 
-u: kind-up kind-load kind-apply
+u: msa-otus kind-up kind-load kind-apply
 
 	
